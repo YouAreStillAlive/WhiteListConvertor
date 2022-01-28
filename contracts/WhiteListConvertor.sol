@@ -54,6 +54,6 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         override
         returns (uint256)
     {
-        IWhiteList(WhiteListAddress).Check(_Subject, _Id);
+        return IWhiteList(WhiteListAddress).Check(_Subject, _Id);
     }
 }

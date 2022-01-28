@@ -1,8 +1,9 @@
+# npm
 node_modules
 # testing
 coverage
 coverage.json
 # production
 build
-#truffle
+# truffle
 package-lock.json
