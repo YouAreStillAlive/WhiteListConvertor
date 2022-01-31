@@ -58,9 +58,9 @@ contract Manageable is Ownable {
             "Array length should be greater than 0"
         );
         for (uint256 i = 0; i < _Ids.length; i++) {
-            if (_NewPrices[i] > 0) {
-                Identifiers[i].Price = _NewPrices[i];
-                Identifiers[i].Operation = _Operations[i];
+            if (_NewPrices[_Ids[i]] > 0) {
+                Identifiers[_Ids[i]].Price = _NewPrices[i];
+                Identifiers[_Ids[i]].Operation = _Operations[i];
             }
         }
     }

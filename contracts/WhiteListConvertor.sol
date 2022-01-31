@@ -3,8 +3,10 @@ pragma solidity >=0.4.24 <0.7.0;
 
 import "./Manageable.sol";
 import "poolz-helper/contracts/IWhiteList.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract WhiteListConvertor is Manageable, IWhiteList {
+    using SafeMath for uint256;
     constructor(address _WhiteListAddress)
         public
         ValidateAddress(_WhiteListAddress)
@@ -56,6 +58,6 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         uint256 userAmount = IWhiteList(WhiteListAddress).Check(_Subject, _Id);
         bool operation = Identifiers[_Id].Operation;
         uint256 price = Identifiers[_Id].Price;
-        return operation ? userAmount / price : userAmount * price;
+        return operation ? userAmount.div(price) : userAmount.mul(price);
     }
 }
