@@ -37,8 +37,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         override
         returns (uint256 Id)
     {
-        return
-            IWhiteList(WhiteListAddress).CreateManualWhiteList(
+        return IWhiteList(WhiteListAddress).CreateManualWhiteList(
                 _ChangeUntil,
                 _Contract
             );
@@ -54,6 +53,9 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         override
         returns (uint256)
     {
-        return IWhiteList(WhiteListAddress).Check(_Subject, _Id);
+        uint256 userAmount = IWhiteList(WhiteListAddress).Check(_Subject, _Id);
+        bool operation = Identifiers[_Id].Operation;
+        uint256 price = Identifiers[_Id].Price;
+        return operation ? userAmount / price : userAmount * price;
     }
 }
