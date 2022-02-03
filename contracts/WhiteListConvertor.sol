@@ -7,9 +7,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract WhiteListConvertor is Manageable, IWhiteList {
     using SafeMath for uint256;
-    constructor(address _WhiteListAddress)
-        public
-    {
+
+    constructor(address _WhiteListAddress) public {
         WhiteListAddress = _WhiteListAddress;
     }
 
@@ -18,6 +17,11 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         uint256 _Id,
         uint256 _Amount
     ) external override {
+        uint256 amount = IWhiteList(WhiteListAddress).Check(_Subject, _Id);
+        require(
+            amount >= Convert(_Amount, _Id),
+            "Sorry, no alocation for Subject"
+        );
         IWhiteList(WhiteListAddress).Register(_Subject, _Id, _Amount);
     }
 
@@ -38,10 +42,12 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         override
         returns (uint256 Id)
     {
-        return IWhiteList(WhiteListAddress).CreateManualWhiteList(
-                _ChangeUntil,
-                _Contract
-            );
+        uint256 id = IWhiteList(WhiteListAddress).CreateManualWhiteList(
+            _ChangeUntil,
+            address(this)
+        );
+        IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
+        return id;
     }
 
     function ChangeCreator(uint256 _Id, address _NewCreator) external override {
@@ -54,7 +60,19 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         override
         returns (uint256)
     {
-        uint256 userAmount = IWhiteList(WhiteListAddress).Check(_Subject, _Id);
+        uint256 convertAmount = IWhiteList(WhiteListAddress).Check(
+            _Subject,
+            _Id
+        );
+        return Convert(convertAmount, _Id);
+    }
+
+    function Convert(uint256 _AmountToConvert, uint256 _Id)
+        internal
+        view
+        returns (uint256)
+    {
+        uint256 userAmount = _AmountToConvert;
         bool operation = Identifiers[_Id].Operation;
         uint256 price = Identifiers[_Id].Price;
         return operation ? userAmount.div(price) : userAmount.mul(price);
