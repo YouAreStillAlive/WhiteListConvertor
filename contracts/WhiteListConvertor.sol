@@ -72,9 +72,9 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         view
         returns (uint256)
     {
-        uint256 userAmount = _AmountToConvert;
+        uint256 amount = _AmountToConvert;
         bool operation = Identifiers[_Id].Operation;
         uint256 price = Identifiers[_Id].Price;
-        return operation ? userAmount.div(price) : userAmount.mul(price);
+        return operation ? amount.mul(price) : amount.div(price);
     }
 }

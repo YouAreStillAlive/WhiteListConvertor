@@ -14,11 +14,6 @@ contract Manageable is Ownable {
     address public WhiteListAddress;
     mapping(uint256 => PriceConvert) public Identifiers; // Pools
 
-    modifier ValidateAddress(address _Addr) {
-        require(_Addr != address(0), "Can't be zero address");
-        _;
-    }
-
     modifier isContract(address _Addr) {
         uint32 size;
         assembly {
@@ -42,9 +37,9 @@ contract Manageable is Ownable {
     function SetWhiteListAddress(address _NewAddress)
         public
         onlyOwner
-        ValidateAddress(_NewAddress)
         isContract(_NewAddress)
     {
+        require(_Addr != address(0), "Can't be zero address");
         WhiteListAddress = _NewAddress;
     }
 }
