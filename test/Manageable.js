@@ -31,13 +31,6 @@ contract('Managable', accounts => {
                 return ev.Id == id && ev.Price == newPrice;
             });
         });
-
-        it('Require works', async () => {
-            await truffleAssert.reverts(
-                instance.SetPrice(0, newPrice, newOperation, { from: ownerAddress }),
-                "Id should be greater than zero"
-            );
-        });
     });
 
     describe('Validation', async () => {
