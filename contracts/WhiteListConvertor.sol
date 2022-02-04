@@ -7,7 +7,6 @@ import "poolz-helper/contracts/IWhiteList.sol";
 contract WhiteListConvertor is Manageable, IWhiteList {
     constructor(address _WhiteListAddress)
         public
-        ValidateAddress(_WhiteListAddress)
     {
         WhiteListAddress = _WhiteListAddress;
     }
