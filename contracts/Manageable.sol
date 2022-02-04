@@ -39,7 +39,7 @@ contract Manageable is Ownable {
         onlyOwner
         isContract(_NewAddress)
     {
-        require(_Addr != address(0), "Can't be zero address");
+        require(_NewAddress != address(0), "Can't be zero address");
         WhiteListAddress = _NewAddress;
     }
 }
