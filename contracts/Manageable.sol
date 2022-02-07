@@ -14,11 +14,8 @@ contract Manageable is Ownable {
     address public WhiteListAddress;
     mapping(uint256 => PriceConvert) public Identifiers; // Pools
 
-    modifier whiteListValidation() {
-        require(
-            WhiteListAddress != address(0x0),
-            "whitelist can't be a null address"
-        );
+    modifier contractValidation() {
+        require(isContract(WhiteListAddress), "Should be contract address");
         _;
     }
 
@@ -42,7 +39,6 @@ contract Manageable is Ownable {
     }
 
     function SetWhiteListAddress(address _NewAddress) public onlyOwner {
-        require(isContract(_NewAddress), "Should be contract address");
         WhiteListAddress = _NewAddress;
     }
 }
