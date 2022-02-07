@@ -16,22 +16,28 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         address _Subject,
         uint256 _Id,
         uint256 _Amount
-    ) external override {
-        uint256 amount = IWhiteList(WhiteListAddress).Check(_Subject, _Id);
-        require(
-            amount >= Convert(_Amount, _Id),
-            "Sorry, no alocation for Subject"
+    ) external override contractValidation {
+        IWhiteList(WhiteListAddress).Register(
+            _Subject,
+            _Id,
+            Convert(_Amount, _Id, !Identifiers[_Id].Operation)
         );
-        IWhiteList(WhiteListAddress).Register(_Subject, _Id, _Amount);
     }
 
-    function IsNeedRegister(uint256 _Id) external view override returns (bool) {
+    function IsNeedRegister(uint256 _Id)
+        external
+        view
+        override
+        contractValidation
+        returns (bool)
+    {
         return IWhiteList(WhiteListAddress).IsNeedRegister(_Id);
     }
 
     function LastRoundRegister(address _Subject, uint256 _Id)
         external
         override
+        contractValidation
     {
         IWhiteList(WhiteListAddress).LastRoundRegister(_Subject, _Id);
     }
@@ -40,17 +46,22 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         payable
         override
+        contractValidation
         returns (uint256 Id)
     {
         uint256 id = IWhiteList(WhiteListAddress).CreateManualWhiteList(
             _ChangeUntil,
             address(this)
         );
-        IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
+        // IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
         return id;
     }
 
-    function ChangeCreator(uint256 _Id, address _NewCreator) external override {
+    function ChangeCreator(uint256 _Id, address _NewCreator)
+        external
+        override
+        contractValidation
+    {
         IWhiteList(WhiteListAddress).ChangeCreator(_Id, _NewCreator);
     }
 
@@ -58,22 +69,23 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         view
         override
+        contractValidation
         returns (uint256)
     {
         uint256 convertAmount = IWhiteList(WhiteListAddress).Check(
             _Subject,
             _Id
         );
-        return Convert(convertAmount, _Id);
+        return Convert(convertAmount, _Id, Identifiers[_Id].Operation);
     }
 
-    function Convert(uint256 _AmountToConvert, uint256 _Id)
-        internal
-        view
-        returns (uint256)
-    {
+    function Convert(
+        uint256 _AmountToConvert,
+        uint256 _Id,
+        bool _Operation
+    ) internal view returns (uint256) {
         uint256 amount = _AmountToConvert;
-        bool operation = Identifiers[_Id].Operation;
+        bool operation = _Operation;
         uint256 price = Identifiers[_Id].Price;
         return operation ? amount.mul(price) : amount.div(price);
     }

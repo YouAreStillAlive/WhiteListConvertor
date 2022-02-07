@@ -34,19 +34,19 @@ contract('Managable', accounts => {
     });
 
     describe('Validation', async () => {
-        it('Validate address', async () => {
-            await truffleAssert.reverts(
-                instance.SetWhiteListAddress("0x0000000000000000000000000000000000000000"),
-                "Can't be zero address"
-            );
-        });
-
         it('Price validation', async () => {
             const wrongPrice = 0;
 
             await truffleAssert.reverts(
                 instance.SetPrice(1, wrongPrice, newOperation, { from: ownerAddress }),
                 "Price should be greater than zero"
+            );
+        });
+
+        it('Contract validation', async () => {
+            await truffleAssert.reverts(
+                instance.ChangeCreator(1, "0x0000000000000000000000000000000000000000"),
+                "Should be contract address"
             );
         });
     });
