@@ -14,7 +14,7 @@ contract Manageable is Ownable {
     address public WhiteListAddress;
     mapping(uint256 => PriceConvert) public Identifiers; // Pools
 
-    function isContract(address _Addr) internal returns(bool){
+    function isContract(address _Addr) internal view returns(bool){
         uint32 size;
         assembly {
             size := extcodesize(_Addr)

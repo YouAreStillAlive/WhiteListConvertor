@@ -17,12 +17,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         uint256 _Id,
         uint256 _Amount
     ) external override {
-        uint256 amount = IWhiteList(WhiteListAddress).Check(_Subject, _Id);
-        require(
-            amount >= Convert(_Amount, _Id),
-            "Sorry, no alocation for Subject"
-        );
-        IWhiteList(WhiteListAddress).Register(_Subject, _Id, _Amount);
+        IWhiteList(WhiteListAddress).Register(_Subject, _Id, Convert(_Amount, _Id, !Identifiers[_Id].Operation));
     }
 
     function IsNeedRegister(uint256 _Id) external view override returns (bool) {
@@ -64,16 +59,16 @@ contract WhiteListConvertor is Manageable, IWhiteList {
             _Subject,
             _Id
         );
-        return Convert(convertAmount, _Id);
+        return Convert(convertAmount, _Id, Identifiers[_Id].Operation);
     }
 
-    function Convert(uint256 _AmountToConvert, uint256 _Id)
+    function Convert(uint256 _AmountToConvert, uint256 _Id, bool _Operation)
         internal
         view
         returns (uint256)
     {
         uint256 amount = _AmountToConvert;
-        bool operation = Identifiers[_Id].Operation;
+        bool operation = _Operation;
         uint256 price = Identifiers[_Id].Price;
         return operation ? amount.mul(price) : amount.div(price);
     }
