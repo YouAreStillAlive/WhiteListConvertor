@@ -16,17 +16,28 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         address _Subject,
         uint256 _Id,
         uint256 _Amount
-    ) external override {
-        IWhiteList(WhiteListAddress).Register(_Subject, _Id, Convert(_Amount, _Id, !Identifiers[_Id].Operation));
+    ) external override whiteListValidation {
+        IWhiteList(WhiteListAddress).Register(
+            _Subject,
+            _Id,
+            Convert(_Amount, _Id, !Identifiers[_Id].Operation)
+        );
     }
 
-    function IsNeedRegister(uint256 _Id) external view override returns (bool) {
+    function IsNeedRegister(uint256 _Id)
+        external
+        view
+        override
+        whiteListValidation
+        returns (bool)
+    {
         return IWhiteList(WhiteListAddress).IsNeedRegister(_Id);
     }
 
     function LastRoundRegister(address _Subject, uint256 _Id)
         external
         override
+        whiteListValidation
     {
         IWhiteList(WhiteListAddress).LastRoundRegister(_Subject, _Id);
     }
@@ -35,6 +46,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         payable
         override
+        whiteListValidation
         returns (uint256 Id)
     {
         uint256 id = IWhiteList(WhiteListAddress).CreateManualWhiteList(
@@ -45,7 +57,11 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         return id;
     }
 
-    function ChangeCreator(uint256 _Id, address _NewCreator) external override {
+    function ChangeCreator(uint256 _Id, address _NewCreator)
+        external
+        override
+        whiteListValidation
+    {
         IWhiteList(WhiteListAddress).ChangeCreator(_Id, _NewCreator);
     }
 
@@ -53,6 +69,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         view
         override
+        whiteListValidation
         returns (uint256)
     {
         uint256 convertAmount = IWhiteList(WhiteListAddress).Check(
@@ -62,11 +79,11 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         return Convert(convertAmount, _Id, Identifiers[_Id].Operation);
     }
 
-    function Convert(uint256 _AmountToConvert, uint256 _Id, bool _Operation)
-        internal
-        view
-        returns (uint256)
-    {
+    function Convert(
+        uint256 _AmountToConvert,
+        uint256 _Id,
+        bool _Operation
+    ) internal view returns (uint256) {
         uint256 amount = _AmountToConvert;
         bool operation = _Operation;
         uint256 price = Identifiers[_Id].Price;
