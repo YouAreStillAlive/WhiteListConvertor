@@ -43,7 +43,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
             _ChangeUntil,
             address(this)
         );
-        IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
+        // IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
         return id;
     }
 
