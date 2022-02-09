@@ -24,16 +24,6 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         );
     }
 
-    function IsNeedRegister(uint256 _Id)
-        external
-        view
-        override
-        contractValidation
-        returns (bool)
-    {
-        return IWhiteList(WhiteListAddress).IsNeedRegister(_Id);
-    }
-
     function LastRoundRegister(address _Subject, uint256 _Id)
         external
         override
@@ -53,7 +43,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
             _ChangeUntil,
             address(this)
         );
-        IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
+        //IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
         return id;
     }
 
