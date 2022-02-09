@@ -44,10 +44,27 @@ contract('Managable', accounts => {
         });
 
         it('Contract validation', async () => {
+            const zeroAddress = "0x0000000000000000000000000000000000000000"
             await truffleAssert.reverts(
-                instance.ChangeCreator(1, "0x0000000000000000000000000000000000000000"),
+                instance.ChangeCreator(1, zeroAddress),
                 "Should be contract address"
             );
+            await truffleAssert.reverts(
+                instance.Register(zeroAddress, '1', '10000'),
+                "Should be contract address"
+            )
+            await truffleAssert.reverts(
+                instance.LastRoundRegister(zeroAddress, '1'),
+                "Should be contract address"
+            )
+            await truffleAssert.reverts(
+                instance.CreateManualWhiteList('10000', zeroAddress),
+                "Should be contract address"
+            )
+            await truffleAssert.reverts(
+                instance.Check(zeroAddress, '1'),
+                "Should be contract address"
+            )
         });
     });
 });
