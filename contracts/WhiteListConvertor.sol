@@ -16,7 +16,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         address _Subject,
         uint256 _Id,
         uint256 _Amount
-    ) external override contractValidation {
+    ) external override {
         IWhiteList(WhiteListAddress).Register(
             _Subject,
             _Id,
@@ -27,7 +27,6 @@ contract WhiteListConvertor is Manageable, IWhiteList {
     function LastRoundRegister(address _Subject, uint256 _Id)
         external
         override
-        contractValidation
     {
         IWhiteList(WhiteListAddress).LastRoundRegister(_Subject, _Id);
     }
@@ -36,7 +35,6 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         payable
         override
-        contractValidation
         returns (uint256 Id)
     {
         uint256 id = IWhiteList(WhiteListAddress).CreateManualWhiteList(
@@ -47,11 +45,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         return id;
     }
 
-    function ChangeCreator(uint256 _Id, address _NewCreator)
-        external
-        override
-        contractValidation
-    {
+    function ChangeCreator(uint256 _Id, address _NewCreator) external override {
         IWhiteList(WhiteListAddress).ChangeCreator(_Id, _NewCreator);
     }
 
@@ -59,7 +53,6 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         view
         override
-        contractValidation
         returns (uint256)
     {
         uint256 convertAmount = IWhiteList(WhiteListAddress).Check(
@@ -73,7 +66,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         uint256 _AmountToConvert,
         uint256 _Id,
         bool _Operation
-    ) internal view returns (uint256) {
+    ) internal view zeroAmount(Identifiers[_Id].Price) returns (uint256) {
         uint256 amount = _AmountToConvert;
         bool operation = _Operation;
         uint256 price = Identifiers[_Id].Price;

@@ -14,25 +14,16 @@ contract Manageable is Ownable {
     address public WhiteListAddress;
     mapping(uint256 => PriceConvert) public Identifiers; // Pools
 
-    modifier contractValidation() {
-        require(isContract(WhiteListAddress), "Should be contract address");
+    modifier zeroAmount(uint256 amount) {
+        require(amount > 0, "Should be greater than zero");
         _;
-    }
-
-    function isContract(address _Addr) internal view returns (bool) {
-        uint32 size;
-        assembly {
-            size := extcodesize(_Addr)
-        }
-        return size > 0;
     }
 
     function SetPrice(
         uint256 _Id,
         uint256 _NewPrice,
         bool _Operation
-    ) external onlyOwner {
-        require(_NewPrice > 0, "Price should be greater than zero");
+    ) external onlyOwner zeroAmount(_NewPrice) {
         Identifiers[_Id].Price = _NewPrice;
         Identifiers[_Id].Operation = _Operation;
         emit NewPrice(_Id, _NewPrice, _Operation);
