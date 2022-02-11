@@ -2,18 +2,18 @@ const WhiteListConvertor = artifacts.require("WhiteListConvertor");
 const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
 
-contract('Managable', accounts => {
+contract('WhiteListConvertor', accounts => {
     let instance, ownerAddress;
     const newOperation = false;
     const newPrice = 50;
 
     before(async () => {
-        instance = await WhiteListConvertor.deployed();
+        instance = await WhiteListConvertor.deployed({ from: accounts[0] });
         const owner = await instance.owner();
         ownerAddress = owner.toString();
     })
 
-    describe('Setting new price', async () => {
+    describe('Setting new price, whitelist address', async () => {
         const id = 1;
 
         it('should set new price', async () => {
@@ -30,8 +30,12 @@ contract('Managable', accounts => {
             truffleAssert.eventEmitted(result, 'NewPrice', (ev) => {
                 return ev.Id == id && ev.Price == newPrice;
             });
-        });
-    });
+        })
+
+        it('should set new address', async () => {
+
+        })
+    })
 
     describe('Validation', async () => {
         it('Price validation', async () => {
@@ -39,32 +43,20 @@ contract('Managable', accounts => {
 
             await truffleAssert.reverts(
                 instance.SetPrice(1, wrongPrice, newOperation, { from: ownerAddress }),
-                "Price should be greater than zero"
+                "Should be greater than zero"
             );
-        });
+        })
 
-        it('Contract validation', async () => {
-            const zeroAddress = "0x0000000000000000000000000000000000000000"
+        it('should revert when the same address', async () => {
+            const previousAddr = await instance.WhiteListAddress();
             await truffleAssert.reverts(
-                instance.ChangeCreator(1, zeroAddress),
-                "Should be contract address"
-            );
+                instance.SetWhiteListAddress(previousAddr), 'Should use new address');
+        })
+
+        it('wrong user ownership', async () => {
+            const newAddress = accounts[5]
             await truffleAssert.reverts(
-                instance.Register(zeroAddress, '1', '10000'),
-                "Should be contract address"
-            )
-            await truffleAssert.reverts(
-                instance.LastRoundRegister(zeroAddress, '1'),
-                "Should be contract address"
-            )
-            await truffleAssert.reverts(
-                instance.CreateManualWhiteList('10000', zeroAddress),
-                "Should be contract address"
-            )
-            await truffleAssert.reverts(
-                instance.Check(zeroAddress, '1'),
-                "Should be contract address"
-            )
-        });
+                instance.SetWhiteListAddress(newAddress, { from: accounts[6] }), 'Authorization Error');
+        })
     });
 });

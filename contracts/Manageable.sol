@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.24 <0.7.0;
 
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "poolz-helper/contracts/GovManager.sol";
 
-contract Manageable is Ownable {
+contract Manageable is GovManager {
     event NewPrice(uint256 Id, uint256 Price, bool Operation);
 
     struct PriceConvert {
@@ -23,13 +23,14 @@ contract Manageable is Ownable {
         uint256 _Id,
         uint256 _NewPrice,
         bool _Operation
-    ) external onlyOwner zeroAmount(_NewPrice) {
+    ) external onlyOwnerOrGov zeroAmount(_NewPrice) {
         Identifiers[_Id].Price = _NewPrice;
         Identifiers[_Id].Operation = _Operation;
         emit NewPrice(_Id, _NewPrice, _Operation);
     }
 
-    function SetWhiteListAddress(address _NewAddress) public onlyOwner {
+    function SetWhiteListAddress(address _NewAddress) public onlyOwnerOrGov {
+        require(_NewAddress != WhiteListAddress, "Should use new address");
         WhiteListAddress = _NewAddress;
     }
 }
