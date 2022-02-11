@@ -33,7 +33,12 @@ contract('WhiteListConvertor', accounts => {
         })
 
         it('should set new address', async () => {
-
+            const previousAddr = await instance.WhiteListAddress();
+            const newAddr = accounts[2];
+            await instance.SetWhiteListAddress(newAddr);
+            const currentAddr = await instance.WhiteListAddress();
+            assert.notEqual(previousAddr, currentAddr);
+            assert.equal(newAddr, currentAddr);
         })
     })
 
