@@ -1,5 +1,5 @@
 {
-  "name": "whitelist-convertor",
+  "name": "poolz-whitelist-converter",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
