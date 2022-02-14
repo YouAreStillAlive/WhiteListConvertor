@@ -5,7 +5,7 @@ import "./Manageable.sol";
 import "poolz-helper/contracts/IWhiteList.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract WhiteListConvertor is Manageable, IWhiteList {
+contract WhiteListConvertor is Manageable {
     using SafeMath for uint256;
 
     constructor(address _WhiteListAddress) public {
@@ -16,7 +16,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         address _Subject,
         uint256 _Id,
         uint256 _Amount
-    ) external override {
+    ) external {
         require(
             msg.sender == Identifiers[_Id].Contract,
             "Only the Contract can call this"
@@ -28,10 +28,7 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         );
     }
 
-    function LastRoundRegister(address _Subject, uint256 _Id)
-        external
-        override
-    {
+    function LastRoundRegister(address _Subject, uint256 _Id) external {
         require(
             msg.sender == Identifiers[_Id].Contract,
             "Only the Contract can call this"
@@ -39,28 +36,9 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         IWhiteList(WhiteListAddress).LastRoundRegister(_Subject, _Id);
     }
 
-    function CreateManualWhiteList(uint256 _ChangeUntil, address _Contract)
-        external
-        payable
-        override
-        returns (uint256 Id)
-    {
-        uint256 id = IWhiteList(WhiteListAddress).CreateManualWhiteList(
-            _ChangeUntil,
-            address(this)
-        );
-        // IWhiteList(WhiteListAddress).ChangeCreator(id, msg.sender);
-        return id;
-    }
-
-    function ChangeCreator(uint256 _Id, address _NewCreator) external override {
-        IWhiteList(WhiteListAddress).ChangeCreator(_Id, _NewCreator);
-    }
-
     function Check(address _Subject, uint256 _Id)
         external
         view
-        override
         returns (uint256)
     {
         uint256 convertAmount = IWhiteList(WhiteListAddress).Check(
