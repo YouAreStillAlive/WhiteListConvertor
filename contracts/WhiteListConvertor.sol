@@ -17,6 +17,10 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         uint256 _Id,
         uint256 _Amount
     ) external override {
+        require(
+            msg.sender == Identifiers[_Id].Contract,
+            "Only the Contract can call this"
+        );
         IWhiteList(WhiteListAddress).Register(
             _Subject,
             _Id,
@@ -28,6 +32,10 @@ contract WhiteListConvertor is Manageable, IWhiteList {
         external
         override
     {
+        require(
+            msg.sender == Identifiers[_Id].Contract,
+            "Only the Contract can call this"
+        );
         IWhiteList(WhiteListAddress).LastRoundRegister(_Subject, _Id);
     }
 

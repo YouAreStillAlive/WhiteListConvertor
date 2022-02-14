@@ -4,11 +4,12 @@ pragma solidity >=0.4.24 <0.7.0;
 import "poolz-helper/contracts/GovManager.sol";
 
 contract Manageable is GovManager {
-    event NewPrice(uint256 Id, uint256 Price, bool Operation);
+    event NewPrice(uint256 Id, uint256 Price, bool Operation, address Contract);
 
     struct PriceConvert {
         uint256 Price;
         bool Operation; // false - devide || true - multiply
+        address Contract;
     }
 
     address public WhiteListAddress;
@@ -22,11 +23,13 @@ contract Manageable is GovManager {
     function SetPrice(
         uint256 _Id,
         uint256 _NewPrice,
-        bool _Operation
+        bool _Operation,
+        address _Contract
     ) external onlyOwnerOrGov zeroAmount(_NewPrice) {
         Identifiers[_Id].Price = _NewPrice;
         Identifiers[_Id].Operation = _Operation;
-        emit NewPrice(_Id, _NewPrice, _Operation);
+        Identifiers[_Id].Contract = _Contract;
+        emit NewPrice(_Id, _NewPrice, _Operation, _Contract);
     }
 
     function SetWhiteListAddress(address _NewAddress) public onlyOwnerOrGov {

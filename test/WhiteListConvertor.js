@@ -6,6 +6,7 @@ contract('WhiteListConvertor', accounts => {
     let instance, ownerAddress;
     const newOperation = false;
     const newPrice = 50;
+    const contract = accounts[9];
 
     before(async () => {
         instance = await WhiteListConvertor.deployed({ from: accounts[0] });
@@ -17,7 +18,7 @@ contract('WhiteListConvertor', accounts => {
         const id = 1;
 
         it('should set new price', async () => {
-            await instance.SetPrice(id, newPrice, newOperation, { from: ownerAddress });
+            await instance.SetPrice(id, newPrice, newOperation, contract, { from: ownerAddress });
             const newCheckPrice = await instance.Identifiers(id);
 
             assert.equal(newCheckPrice[0].toNumber(), newPrice);
@@ -25,7 +26,7 @@ contract('WhiteListConvertor', accounts => {
         });
 
         it('NewPrice event is emitted', async () => {
-            result = await instance.SetPrice(id, newPrice, newOperation, { from: ownerAddress });
+            result = await instance.SetPrice(id, newPrice, newOperation, contract, { from: ownerAddress });
             // Check event
             truffleAssert.eventEmitted(result, 'NewPrice', (ev) => {
                 return ev.Id == id && ev.Price == newPrice;
@@ -47,7 +48,7 @@ contract('WhiteListConvertor', accounts => {
             const wrongPrice = 0;
 
             await truffleAssert.reverts(
-                instance.SetPrice(1, wrongPrice, newOperation, { from: ownerAddress }),
+                instance.SetPrice(1, wrongPrice, newOperation, contract, { from: ownerAddress }),
                 "Should be greater than zero"
             );
         })
@@ -59,9 +60,15 @@ contract('WhiteListConvertor', accounts => {
         })
 
         it('wrong user ownership', async () => {
-            const newAddress = accounts[5]
+            const subject = accounts[5];
+            const wrongAddr = accounts[3];
+            const id = '1';
             await truffleAssert.reverts(
-                instance.SetWhiteListAddress(newAddress, { from: accounts[6] }), 'Authorization Error');
+                instance.SetWhiteListAddress(subject, { from: wrongAddr }), 'Authorization Error');
+            await truffleAssert.reverts(
+                instance.Register(subject, id, '10000000', { from: wrongAddr }), 'Only the Contract can call this');
+            await truffleAssert.reverts(
+                instance.LastRoundRegister(subject, id, { from: wrongAddr }), 'Only the Contract can call this');
         })
     });
 });
