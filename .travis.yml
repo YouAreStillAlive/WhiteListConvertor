@@ -6,7 +6,8 @@ node_js:
 jobs:
   include:
       before_install:
-      - sudo apt-get update && apt-get install build-essential
+      - sudo apt-get update 
+      - sudo apt-get install build-essential
 install:
   - bash ./bin/travis-install.sh
 script:
