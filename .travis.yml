@@ -2,10 +2,10 @@ os: linux
 dist: xenial
 language: node_js
 node_js:
- - "14.19.0"
+ - "14.18.3"
 install:
   - bash ./bin/travis-install.sh
 script:
-  - bash ./bin/test.sh
+  - truffle run coverage
 after_script:
  - bash <(curl -s https://codecov.io/bash)
