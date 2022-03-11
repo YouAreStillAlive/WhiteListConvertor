@@ -1,13 +1,12 @@
+os: linux
 dist: xenial
 language: node_js
 node_js:
  - "16.14.0"
-matrix:
+jobs:
   include:
-      os: linux
-      dist: xenial
       before_install:
-      - apt-get update && apt-get install build-essential
+      - sudo apt-get update && apt-get install build-essential
 install:
   - bash ./bin/travis-install.sh
 script:
