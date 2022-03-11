@@ -1,3 +1,3 @@
 #!/bin/bash
-npm install -g ganache-cli truffle windows-build-tools
+npm install -g node-gyp ganache truffle
 npm install
