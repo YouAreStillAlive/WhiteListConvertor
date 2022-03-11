@@ -7,9 +7,10 @@ matrix:
     - os: linux
       dist: xenial
       before_install:
-      - sudo add-apt-repository --yes ppa:deadsnakes/ppa
-      - sudo apt-get update
-      - sudo apt-get install Python3.7
+      - apt-get update 
+      - add-apt-repository -y ppa:deadsnakes/ppa 
+      - apt-get update 
+      - apt install -y python3.8
 install:
   - bash ./bin/travis-install.sh
 script:
