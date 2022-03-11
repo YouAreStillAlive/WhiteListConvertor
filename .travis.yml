@@ -6,6 +6,8 @@ matrix:
   include:
       os: linux
       dist: xenial
+      before_install:
+      - apt-get update && apt-get install build-essential
 install:
   - bash ./bin/travis-install.sh
 script:
