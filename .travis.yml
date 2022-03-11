@@ -7,13 +7,8 @@ matrix:
     - os: linux
       dist: xenial
       before_install:
-      - sudo add-apt-repository ppa:ethereum/ethereum -y
       - sudo apt-get update
-      - sudo apt-get install build-essential -y
-      - sudo apt-get install gcc g++ libssl-dev libudev-dev pkg-config
-      - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-      - sudo apt-get install -y nodejs
-      - rm -rf node_modules
+      - sudo apt-get install python
 install:
   - bash ./bin/travis-install.sh
 script:
