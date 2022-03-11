@@ -7,9 +7,10 @@ matrix:
     - os: linux
       dist: xenial
       before_install:
+      - sudo add-apt-repository ppa:ethereum/ethereum -y
       - sudo apt-get update
       - sudo apt-get install build-essential -y
-      - sudo apt-get install libssl-dev libudev-dev pkg-config
+      - sudo apt-get install gcc g++ libssl-dev libudev-dev pkg-config
 install:
   - bash ./bin/travis-install.sh
 script:
