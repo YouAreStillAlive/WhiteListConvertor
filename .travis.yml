@@ -6,6 +6,8 @@ matrix:
   include:
     - os: linux
       dist: xenial
+      before_install:
+      - sudo apt install python3.8
 install:
   - bash ./bin/travis-install.sh
 script:
