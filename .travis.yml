@@ -2,7 +2,7 @@ os: linux
 dist: xenial
 language: node_js
 node_js:
- - "16.14.0"
+ - "14.19.0"
 install:
   - bash ./bin/travis-install.sh
 script:
